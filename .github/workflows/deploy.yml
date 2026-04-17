@@ -1,0 +1,112 @@
+name: Deploy Frontend SaaS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - agendas
+          - parking
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [agendas]  # Agrega aquí nuevos módulos: , parking
+    environment: ${{ github.event.inputs.environment || matrix.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Clean local dist
+        run: rm -rf dist
+
+      - name: Build frontend
+        run: |
+          rm -f .env.production
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env.production
+          echo "VITE_API_REPO_URL=${{ secrets.VITE_API_REPO_URL }}" >> .env.production
+          echo "VITE_RECAPTCHA_SITE_KEY=${{ secrets.VITE_RECAPTCHA_SITE_KEY }}" >> .env.production
+          echo "VITE_SUBDOMAIN=${{ secrets.VITE_SUBDOMAIN }}" >> .env.production
+          echo "VITE_BASE_DOMAIN=${{ secrets.VITE_BASE_DOMAIN }}" >> .env.production
+          echo "VITE_LOCAL_DOMAIN=${{ secrets.VITE_LOCAL_DOMAIN }}" >> .env.production
+          npm run build
+
+      # Crear carpetas necesarias
+      - name: Prepare VPS folders
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            mkdir -p /var/www/saas/frontend/dist
+            mkdir -p /var/www/saas/docker
+
+      # Limpiar solo dist
+      - name: Clean old dist
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            rm -rf /var/www/saas/frontend/dist/spa/*
+
+      # Preparar carpeta temporal para deploy limpio
+      - name: Prepare temp deploy folder
+        run: |
+          rm -rf temp_deploy
+          mkdir -p temp_deploy
+          cp -r dist/spa/* temp_deploy/
+
+      # Subir build
+      - name: Upload dist
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "temp_deploy/*"
+          target: "/var/www/saas/frontend/dist/spa/"
+          strip_components: 1
+          overwrite: true
+
+      # Subir nginx config desde repo
+      - name: Upload nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "nginx/default.conf"
+          target: "/var/www/saas/docker/"
+          strip_components: 1
+          overwrite: true
+
+      - name: Restart frontend container
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/saas
+            docker compose up -d saas-frontend
