@@ -1,4 +1,4 @@
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { Loading } from 'quasar'
 import { setAuthorization } from './function-general'
 

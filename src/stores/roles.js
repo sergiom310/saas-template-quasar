@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { Notify, Loading } from 'quasar'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 

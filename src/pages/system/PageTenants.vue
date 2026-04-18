@@ -260,7 +260,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { Notify, Dialog, date, Loading } from 'quasar'
 
 const tenants = ref([])

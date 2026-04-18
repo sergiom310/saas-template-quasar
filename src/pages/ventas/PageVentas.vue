@@ -628,8 +628,7 @@ const imprimirRecibo = async (venta) => {
   const totalPagado = calcularTotalPagado(ventaCompleta)
   const saldoPendiente = ventaCompleta.total - totalPagado
 
-  // Obtener configuración de empresa (similar a PageRegistroEntrada.vue)
-  let config = window.configuracionEmpresa || { 
+  const config = { 
     imp_logo: 'S', 
     imp_nombre: 'S', 
     imp_nit: 'S', 
@@ -645,26 +644,10 @@ const imprimirRecibo = async (venta) => {
       xhr.open('GET', '/api/empresa', false)
       xhr.send(null)
       if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText)
-        window.empresaData = data
+        window.empresaData = JSON.parse(xhr.responseText)
       }
     } catch (e) {
        /* ignorar */
-       console.log(e);
-      }
-  }
-
-  if (!window.configuracionEmpresa) {
-    try {
-      const xhr2 = new XMLHttpRequest()
-      xhr2.open('GET', '/api/configuracion', false)
-      xhr2.send(null)
-      if (xhr2.status === 200) {
-        config = JSON.parse(xhr2.responseText)
-        window.configuracionEmpresa = config
-      }
-    } catch (e) {
-       /* ignorar */ 
        console.log(e);
       }
   }

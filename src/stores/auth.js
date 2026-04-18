@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 // import { setAuthorization } from 'src/functions/function-general'
 import { getLocalUser, getPermsUser, getRoleUser } from 'src/functions/function-auth'
 import { Loading, Dialog, Notify } from 'quasar'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 
 // Función helper para obtener módulos del localStorage

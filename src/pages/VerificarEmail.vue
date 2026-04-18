@@ -79,7 +79,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 
 export default {
   name: 'VerificarEmail',

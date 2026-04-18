@@ -47,8 +47,8 @@ export default {
       // Detectar si estamos en el dominio principal (sin subdominio de tenant)
       const hostname = window.location.hostname;
       return hostname === 'localhost' || 
-             hostname === 'agendas.grupoados.com' || 
-             hostname === 'agendas.local' ||
+             hostname === 'bitwia.com' || 
+             hostname === 'template.local' ||
              hostname.split('.').length <= 2;
     }
   },

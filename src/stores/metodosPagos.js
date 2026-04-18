@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { Loading, Notify } from 'quasar'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 

@@ -1,5 +1,5 @@
 import { getPermsUser } from 'src/functions/function-auth';
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { date } from 'quasar'
 
 export function laravelCan(permiso) {

@@ -5,7 +5,7 @@ dotenv.config()
 
 export default defineConfig((ctx) => {
   return {
-    boot: ['i18n', 'axios', 'router-auth', 'directives'],
+    boot: ['i18n', 'api', 'router-auth', 'directives'],
 
     css: ['app.scss'],
 

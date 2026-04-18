@@ -35,31 +35,17 @@ Este documento explica cómo configurar GitHub Actions para hacer deploy a múlt
 
 | Secret Name | Valor | Descripción |
 |-------------|-------|-------------|
-| `VPS_HOST` | `IP o dominio del VPS de agendas` | Ej: `159.65.XXX.XXX` o `agendas.grupoados.com` |
+| `VPS_HOST` | `IP o dominio del VPS de agendas` | Ej: `159.65.XXX.XXX` o `bitwia.com` |
 | `VPS_USER` | `root` o tu usuario SSH | Usuario para conectarse por SSH |
 | `VPS_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----...` | Llave privada SSH completa |
-| `VITE_API_URL` | `https://api.agendas.grupoados.com` | URL del backend |
+| `VITE_API_URL` | `https://api.bitwia.com` | URL del backend |
 | `VITE_API_REPO_URL` | `storage/repo/` | Path de repositorio |
 | `VITE_RECAPTCHA_SITE_KEY` | `6Ld8-IgrAAAAAIJP...` | Site key de reCAPTCHA |
 | `VITE_SUBDOMAIN` | `agendas` | Subdominio del módulo |
-| `VITE_BASE_DOMAIN` | `grupoados.com` | Dominio base |
-| `VITE_LOCAL_DOMAIN` | `agendas.local` | Dominio local desarrollo |
+| `VITE_BASE_DOMAIN` | `bitwia.com` | Dominio base |
+| `VITE_LOCAL_DOMAIN` | `template.local` | Dominio local desarrollo |
 
-#### Environment: **parking**
-
-| Secret Name | Valor | Descripción |
-|-------------|-------|-------------|
-| `VPS_HOST` | `IP o dominio del VPS de parking` | Ej: `159.65.YYY.YYY` o `parking.grupoados.com` |
-| `VPS_USER` | `root` o tu usuario SSH | Usuario para conectarse por SSH |
-| `VPS_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----...` | Llave privada SSH completa |
-| `VITE_API_URL` | `https://api.parking.grupoados.com` | URL del backend |
-| `VITE_API_REPO_URL` | `storage/repo/` | Path de repositorio |
-| `VITE_RECAPTCHA_SITE_KEY` | `6Ld8-IgrAAAAAIJP...` | Site key de reCAPTCHA |
-| `VITE_SUBDOMAIN` | `parking` | Subdominio del módulo |
-| `VITE_BASE_DOMAIN` | `grupoados.com` | Dominio base |
-| `VITE_LOCAL_DOMAIN` | `parking.local` | Dominio local desarrollo |
-
-### Paso 3: Preparar los VPS
+### Paso 3: Preparar el VPS
 
 En **cada VPS**, ejecuta estos comandos:
 
@@ -81,13 +67,13 @@ Renombra los servicios en tu `docker-compose.yml`:
 
 ```yaml
 services:
-  saas-backend:        # antes: agendas-backend
+  saas-backend:
     # ... configuración
     
-  saas-webserver:      # antes: agendas-webserver
+  saas-webserver:
     # ... configuración
     
-  saas-frontend:       # antes: agendas-frontend
+  saas-frontend:
     # ... configuración
 ```
 

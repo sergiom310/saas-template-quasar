@@ -18,7 +18,7 @@
           title="Dark Mode"
         />
 
-        <q-btn v-if="isLoggedIn && !isLandlord && hasModulo('agendas')" dense flat round icon="shopping_cart" class="justify-end q-pr-xs" @click="gotoCart">
+        <q-btn v-if="isLoggedIn && !isLandlord" dense flat round icon="shopping_cart" class="justify-end q-pr-xs" @click="gotoCart">
           <q-badge color="accent" text-color="white" floating>{{ totalItems }}</q-badge>
         </q-btn>        
 
@@ -134,234 +134,33 @@
               </q-item-section>
             </q-item>
 
-            <q-item to="/system/bitacora" :inset-level="0.5" exact clickable>
-              <q-item-section>
-                <q-item-label>Bitácora</q-item-label>
-              </q-item-section>
-            </q-item>
           </q-expansion-item>
 
-          <!-- Menú Agenda solo visible para tenants (NO para landlord/admin) -->
-          <q-expansion-item
-            v-if="!isLandlord && hasModulo('agendas')"
-            expand-separator
-            icon="event"
-            label="Agenda"
-          >
-            <q-expansion-item
-              expand-separator
-              icon="settings"
-              label="Configuración"
-              :header-inset-level="0.5"
-            >
-              <q-item to="/agenda/especialidades" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="medical_services" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Especialidades</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item to="/agenda/profesionales" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="badge" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Profesionales</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-item to="/agenda/MetodosPagos" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="payment" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Medios de Pagos</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item to="/agenda/franjas-horarias" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="access_time" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Franjas Horarias</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-item to="/agenda/clientes" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="person" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Clientes Agenda</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item to="/agenda/mis-pagos" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="payment" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Mis Pagos</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-expansion-item
-                v-if="laravelCan('admin.index')"
-                expand-separator
-                icon="store"
-                label="Admin. Ventas"
-                caption=""
-                :header-inset-level="0.5"
-                default-closed
-              >
-                <q-item
-                  to="/agendas/marcas"
-                  v-if="laravelCan('admin.create')"
-                  :inset-level="1.5"
-                  exact
-                  clickable
-                >
-                  <q-item-section avatar>
-                    <q-icon name="domain" color="primary" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Marcas</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item
-                  to="/agendas/categories"
-                  v-if="laravelCan('admin.create')"
-                  :inset-level="1.5"
-                  exact
-                  clickable
-                >
-                  <q-item-section avatar>
-                    <q-icon name="category" color="primary" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Categorias</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item
-                  to="/agendas/tags"
-                  v-if="laravelCan('admin.create')"
-                  :inset-level="1.5"
-                  exact
-                  clickable
-                >
-                  <q-item-section avatar>
-                    <q-icon name="tag" color="primary" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Etiquetas</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item
-                  to="/agendas/products"
-                  v-if="laravelCan('admin.create')"
-                  :inset-level="1.5"
-                  exact
-                  clickable
-                >
-                  <q-item-section avatar>
-                    <q-icon name="article" color="primary" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Productos</q-item-label>
-                  </q-item-section>
-                </q-item>
-                
-                <q-item to="/agendas/mis-ventas" :inset-level="1.5" exact clickable>
-                  <q-item-section avatar>
-                    <q-icon name="payment" color="primary" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Mis Ventas</q-item-label>
-                  </q-item-section>
-                </q-item>
-                
-              </q-expansion-item>              
-            </q-expansion-item>
-
-            <q-item to="/agenda/agendar" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="event_available" color="secondary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Agendar</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item to="/calendario" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="calendar_month" color="info" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Calendario</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item to="/pagos" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="payments" color="positive" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Pagos</q-item-label>
-              </q-item-section>
-            </q-item>
-              <q-item to="/gastos" :inset-level="0.5" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="money_off" color="negative" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Gastos</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item to="/reportes" :inset-level="0.5" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="assessment" color="purple" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Reportes</q-item-label>
-                </q-item-section>
-              </q-item>
-
+          <!-- Menú Tienda solo visible para tenants (NO para landlord/admin) -->
+          <template v-if="!isLandlord">
             <q-expansion-item
               v-if="categoriesHome.length > 0"
               expand-separator
               icon="shopping_cart"
-              label="Productos"
-              :header-inset-level="0.5"
+              label="Categorías"
             >
               <div v-for="category in categoriesHome" :key="category.id">
                 <div v-if="category.subCategories.length > 0">
-                  <q-expansion-item :header-inset-level="1">
+                  <q-expansion-item :header-inset-level="0.5">
                     <template v-slot:header>
                       <q-item-section avatar>
                         <q-avatar>
                           <img :src="isImagen(category.imagen)" />
                         </q-avatar>
                       </q-item-section>
-
-                      <q-item-section v-if="locale == 'es-CO'">
-                        {{ category.name }}
-                      </q-item-section>
-                      <q-item-section v-if="locale == 'en-US'">
-                        {{ category.name_en }}
-                      </q-item-section>
+                      <q-item-section v-if="locale == 'es-CO'">{{ category.name }}</q-item-section>
+                      <q-item-section v-if="locale == 'en-US'">{{ category.name_en }}</q-item-section>
                     </template>
-
                     <q-item
                       v-for="item in category.subCategories"
                       :key="item.id"
                       :to="'/products/' + item.slug"
-                      :inset-level="1.5"
+                      :inset-level="1"
                       exact
                       clickable
                     >
@@ -378,7 +177,7 @@
                   </q-expansion-item>
                 </div>
                 <div v-else>
-                  <q-item :to="'/products/' + category.slug" :inset-level="1" exact clickable>
+                  <q-item :to="'/products/' + category.slug" :inset-level="0.5" exact clickable>
                     <q-item-section avatar>
                       <q-avatar>
                         <img v-if="category.imagen" :src="isImagen(category.imagen)" />
@@ -393,155 +192,113 @@
                 </div>
               </div>
             </q-expansion-item>
-              
-          </q-expansion-item>
 
-          <!-- Menú Parqueaderos solo visible para tenants (NO para landlord/admin) -->
-          <q-expansion-item
-            v-if="!isLandlord && hasModulo('parking')"
-            expand-separator
-            icon="local_parking"
-            label="Parqueaderos"
-          >
             <q-expansion-item
               v-if="laravelCan('admin.index')"
-              :header-inset-level="0.5"
               expand-separator
               icon="settings"
-              label="Configuración"
+              label="Administración"
             >
-              <q-item to="/parqueaderos/TipoVehiculos" :inset-level="1" exact clickable>
+              <q-item
+                to="/tienda/marcas"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
                 <q-item-section avatar>
-                  <q-icon name="directions_car" color="primary" />
+                  <q-icon name="domain" color="primary" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Tipos de Vehículos</q-item-label>
+                  <q-item-label>Marcas</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item to="/parqueaderos/Tarifas" :inset-level="1" exact clickable>
+              <q-item
+                to="/tienda/categories"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
                 <q-item-section avatar>
-                  <q-icon name="toll" color="primary" />
+                  <q-icon name="category" color="primary" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Tarifas</q-item-label>
+                  <q-item-label>Categorías</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item to="/parqueaderos/ReglasTarifas" :inset-level="1" exact clickable>
+              <q-item
+                to="/tienda/tags"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
                 <q-item-section avatar>
-                  <q-icon name="rule" color="primary" />
+                  <q-icon name="tag" color="primary" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Reglas Tarifas</q-item-label>
+                  <q-item-label>Etiquetas</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item to="/parqueaderos/MetodosPagos" :inset-level="1" exact clickable>
+              <q-item
+                to="/tienda/products"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
+                <q-item-section avatar>
+                  <q-icon name="inventory_2" color="primary" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Productos</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item
+                to="/tienda/metodos-pagos"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
                 <q-item-section avatar>
                   <q-icon name="payment" color="primary" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Medios de Pagos</q-item-label>
+                  <q-item-label>Métodos de Pago</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item to="/parqueaderos/empresa-config" :inset-level="1" exact clickable>
+              <q-item
+                to="/tienda/empresa"
+                v-if="laravelCan('admin.create')"
+                :inset-level="0.5"
+                exact
+                clickable
+              >
                 <q-item-section avatar>
                   <q-icon name="business" color="primary" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Configuración Empresa</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item to="/parqueaderos/configuraciones-generales" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="settings" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Configuraciones Generales</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item to="/system/users" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="person" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Usuarios</q-item-label>
-                </q-item-section>                
-              </q-item>
-              <q-item to="/parqueaderos/mis-pagos" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="payment" color="primary" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Mis Pagos</q-item-label>
+                  <q-item-label>Mi Empresa</q-item-label>
                 </q-item-section>
               </q-item>
 
+              <q-item to="/ventas" :inset-level="0.5" exact clickable>
+                <q-item-section avatar>
+                  <q-icon name="receipt_long" color="positive" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Ventas</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-expansion-item>
-              <q-expansion-item
-            expand-separator
-            icon="receipt_long"
-            label="Mensualidades"
-            :header-inset-level="0.5"
-          >
-            <q-item to="/mensualidades/clientes" :inset-level="1" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="people" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Clientes</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/mensualidades/pagos" :inset-level="1" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="payment" color="warning" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Pagos</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-expansion-item>
-
-
-            <q-item to="/parqueaderos/registro-entrada" :inset-level="0" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="input" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Registro Entradas/Salidas</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item v-if="laravelCan('admin.index')" to="/parqueaderos/reportes-sistema" :inset-level="0" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="analytics" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Reportes del sistema</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item to="/parqueaderos/reportes-usuario" :inset-level="0" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="person_search" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Reportes de Usuario</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item to="/parqueaderos/cuadre-caja" :inset-level="0" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="payments" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Cuadre de caja</q-item-label>
-              </q-item-section>
-            </q-item>
-
-          </q-expansion-item>
+          </template>
           
         </div>
       </q-list>
@@ -584,7 +341,7 @@ const { locale, t } = useI18n({ useScope: 'global' })
 
 const urlRepo = `${import.meta.env.VITE_API_URL}/`
 const authStore = useAuthStore()
-const { isLoggedIn, currentUser, currentRoleUser, hasModulo } = storeToRefs(authStore)
+const { isLoggedIn, currentUser, currentRoleUser } = storeToRefs(authStore)
 const categoryStore = useCategoryStore()
 const { categoriesHome } = storeToRefs(categoryStore)
 
@@ -657,10 +414,7 @@ const nameCurrentUser = computed(() => {
 // Detectar si estamos en el dominio landlord (principal) o en un tenant (subdominio)
 const isLandlord = computed(() => {
   const hostname = window.location.hostname
-  // Es landlord si estamos en el dominio principal sin subdominio de cliente
-  return hostname === 'localhost' || 
-         hostname === 'agendas.grupoados.com' || 
-         hostname === 'agendas.local'
+  return hostname === 'localhost'
 })
 
 // Watcher para cambios en el tamaño de pantalla

@@ -173,29 +173,6 @@
 
           <q-separator class="q-my-md" />
 
-          <!-- Cliente (Opcional) -->
-          <div class="text-h6 q-mb-md">Cliente (Opcional)</div>
-          <q-select
-            outlined
-            v-model="checkoutForm.cliente_id"
-            :options="clientes"
-            option-value="id_cliente"
-            option-label="nombre"
-            emit-value
-            map-options
-            label="Seleccione un cliente (opcional)"
-            clearable
-          >
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
-            <template v-slot:hint>
-              Seleccione un cliente si requiere factura o recibo
-            </template>
-          </q-select>
-
-          <q-separator class="q-my-md" />
-
           <!-- Método de Pago -->
           <div class="text-h6 q-mb-md">Pago</div>
           
@@ -287,7 +264,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useCartStore } from 'src/stores/shoppingCart'
 import { useVentasStore } from 'src/stores/ventas'
 import { useAuthStore } from 'src/stores/auth'
-import { useClientesAgendaStore } from 'src/stores/clientesAgenda'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -304,14 +280,12 @@ const router = useRouter()
 const cartStore = useCartStore()
 const ventasStore = useVentasStore()
 const authStore = useAuthStore()
-const clientesStore = useClientesAgendaStore()
 
 const { cart, totalItems, totalPrice, totalPriceUsd, totalDiscount, totalDiscountUsd } =
   storeToRefs(cartStore)
 const { removeFromCart, updateQuantity, clearCart } = cartStore
 
 const metodosPago = computed(() => ventasStore.metodosPago)
-const clientes = computed(() => clientesStore.clientes)
 
 const { locale, t } = useI18n({ useScope: 'global' })
 
@@ -319,7 +293,6 @@ const { locale, t } = useI18n({ useScope: 'global' })
 const dialogCheckout = ref(false)
 const processingCheckout = ref(false)
 const checkoutForm = ref({
-  cliente_id: null,
   metodo_pago_id: null,
   monto: 0,
   referencia: '',
@@ -364,8 +337,7 @@ const imprimirRecibo = async (venta) => {
   const totalPagado = ventaCompleta.pagos?.reduce((sum, pago) => sum + parseFloat(pago.monto), 0) || 0
   const saldoPendiente = ventaCompleta.total - totalPagado
 
-  // Obtener configuración de empresa
-  let config = window.configuracionEmpresa || { 
+  const config = { 
     imp_logo: 'S', imp_nombre: 'S', imp_nit: 'S', 
     imp_tel: 'S', imp_dir: 'S', imp_horario: 'S' 
   }
@@ -378,21 +350,6 @@ const imprimirRecibo = async (venta) => {
       xhr.send(null)
       if (xhr.status === 200) {
         window.empresaData = JSON.parse(xhr.responseText)
-      }
-    } catch (e) {
-       /* ignorar */ 
-       console.log(e);
-    }
-  }
-
-  if (!window.configuracionEmpresa) {
-    try {
-      const xhr2 = new XMLHttpRequest()
-      xhr2.open('GET', '/api/configuracion', false)
-      xhr2.send(null)
-      if (xhr2.status === 200) {
-        window.configuracionEmpresa = JSON.parse(xhr2.responseText)
-        config = window.configuracionEmpresa
       }
     } catch (e) {
        /* ignorar */ 
@@ -684,10 +641,9 @@ const procesarCheckout = async () => {
   }
 }
 
-// Cargar métodos de pago y clientes al montar el componente
+// Cargar métodos de pago al montar el componente
 onMounted(async () => {
   await ventasStore.loadMetodosPago()
-  await clientesStore.loadClientes()
 })
 </script>
 

@@ -23,8 +23,8 @@
             <!-- Email -->
             <q-card-section class="row items-center q-gutter-md">
               <q-icon name="email" color="primary" size="32px" />
-              <a href="mailto:contactogrupoados@gmail.com" class="contact-link text-body1">
-                contactogrupoados@gmail.com
+              <a href="mailto:sergiogiovanny05@gmail.com" class="contact-link text-body1">
+                sergiogiovanny05@gmail.com
               </a>
             </q-card-section>
 
@@ -34,7 +34,7 @@
             <q-card-section class="row items-center q-gutter-md">
               <q-icon name="whatsapp" color="positive" size="32px" />
               <a :href="whatsappUrl" target="_blank" class="contact-link text-body1">
-                +57 310 4129020
+                +57 316 3737253
               </a>
             </q-card-section>
 
@@ -68,7 +68,7 @@ import { computed } from 'vue'
 const { t } = useI18n()
 
 // Número de WhatsApp (sin espacios, sin +, solo dígitos)
-const phoneNumber = '573104129020'
+const phoneNumber = '573163737253'
 
 // Mensaje inicial para WhatsApp
 const whatsappMessage = computed(() => {

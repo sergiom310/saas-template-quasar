@@ -5,7 +5,7 @@
 
         <div class="row absolute-center">
           <q-card class="my-card">
-            <img src="~assets/ccheminot-agenda-1124013_640.png" alt="Agendas" style="max-width: 290px;"/>
+            <img src="~assets/eshop.png" alt="Dashboard" style="max-width: 290px;"/>
       
             <q-card-actions align="around">
             </q-card-actions>

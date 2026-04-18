@@ -26,14 +26,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Clean local dist
         run: rm -rf dist
@@ -47,7 +52,7 @@ jobs:
           echo "VITE_SUBDOMAIN=${{ secrets.VITE_SUBDOMAIN }}" >> .env.production
           echo "VITE_BASE_DOMAIN=${{ secrets.VITE_BASE_DOMAIN }}" >> .env.production
           echo "VITE_LOCAL_DOMAIN=${{ secrets.VITE_LOCAL_DOMAIN }}" >> .env.production
-          npm run build
+          pnpm run build
 
       # Crear carpetas necesarias
       - name: Prepare VPS folders

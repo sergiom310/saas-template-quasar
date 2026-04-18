@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { api } from 'boot/axios'
+import { api } from 'boot/api'
 import { Loading, Notify } from 'quasar'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 
@@ -178,15 +178,15 @@ export const useVentasStore = defineStore('ventas', {
     },
 
     /**
-     * Cargar métodos de pago disponibles
+     * Cargar métodos de pago disponibles (lista estática)
      */
     async loadMetodosPago() {
       try {
-        const response = await api.get('/api/agd-metodos-pago/activos')
+        const response = await api.get('/api/metodos-pago/activos')
         this.metodosPago = response.data
         return response.data
       } catch (error) {
-        showErrorMessage(error.response?.data?.errors)
+        showErrorMessage(error)
         return []
       }
     },

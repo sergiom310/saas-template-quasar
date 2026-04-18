@@ -90,130 +90,9 @@
           <q-icon name="domain" class="input-icon" />
         </template>
         <template v-slot:hint>
-          <span class="text-caption text-grey-6">Tu URL será: {{formData.domain || 'tudominio'}}.{{ mainDomainUrl }}</span>
+          <span class="text-caption text-grey-6">Tu URL será: {{formData.domain || 'tudominio'}}.{{ tenantBaseDomain }}</span>
         </template>
       </q-input>
-    </div>
-
-    <!-- Módulos Field - Solo Registro Main Domain -->
-    <div class="q-mb-lg modern-input-wrapper" v-if="tab === 'register' && isMainDomain">
-      <q-select
-        v-model="formData.modulos"
-        :options="modulosDisponibles"
-        :rules="[(val) => val && val.length > 0 || 'Selecciona al menos un módulo']"
-        ref="modulos"
-        option-value="id"
-        option-label="nombre_modulo"
-        emit-value
-        map-options
-        multiple
-        lazy-rules
-        filled
-        class="modern-input"
-        label="Módulos"
-        hide-bottom-space
-        :loading="loadingModulos"
-        counter
-        stack-label
-        use-input
-        input-debounce="0"
-      >
-        <template v-slot:prepend>
-          <q-icon name="widgets" class="input-icon" />
-        </template>
-        <template v-slot:hint>
-          <span class="text-caption text-grey-6">Selecciona los módulos que necesitas para tu negocio</span>
-        </template>
-        
-        <!-- Chips personalizados para los módulos seleccionados -->
-        <template v-slot:selected-item="scope">
-          <q-chip
-            removable
-            @remove="scope.removeAtIndex(scope.index)"
-            :tabindex="scope.tabindex"
-            color="primary"
-            text-color="white"
-            class="q-ma-xs"
-            size="md"
-          >
-            <q-avatar 
-              :icon="getModuloIcon(scope.opt)" 
-              color="white" 
-              text-color="primary"
-              size="24px"
-            />
-            <span class="q-ml-xs">{{ getModuloNombre(scope.opt) }}</span>
-          </q-chip>
-        </template>
-
-        <!-- Opciones desplegables con información detallada -->
-        <template v-slot:option="scope">
-          <q-item 
-            v-bind="scope.itemProps"
-            class="q-pa-md"
-          >
-            <q-item-section avatar>
-              <q-avatar 
-                :icon="scope.opt.slug === 'agendas' ? 'event' : 'local_parking'" 
-                color="primary"
-                text-color="white"
-                size="40px"
-              />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-medium text-body1">
-                {{ scope.opt.nombre_modulo }}
-              </q-item-label>
-              <q-item-label caption class="text-grey-7 q-mt-xs" v-if="scope.opt.descripcion">
-                {{ scope.opt.descripcion }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side class="text-right">
-              <q-item-label class="text-primary text-weight-bold">
-                ${{ scope.opt.precio_mensual }}
-              </q-item-label>
-              <q-item-label caption class="text-grey-6">
-                por mes
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </template>
-
-        <!-- Mensaje cuando no hay opciones -->
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No hay módulos disponibles
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </div>
-
-    <!-- Método de pago - Solo Registro Main Domain -->
-    <div class="q-mb-lg modern-input-wrapper" v-if="tab === 'register' && isMainDomain && formData.modulos && formData.modulos.length > 0">
-      <q-select
-        v-model="formData.metodo_pago"
-        :options="[
-          { label: 'Mensual', value: 'mensual' },
-          { label: 'Anual', value: 'anual' }
-        ]"
-        option-value="value"
-        option-label="label"
-        emit-value
-        map-options
-        filled
-        class="modern-input"
-        label="Método de pago"
-        hide-bottom-space
-      >
-        <template v-slot:prepend>
-          <q-icon name="payments" class="input-icon" />
-        </template>
-        <template v-slot:hint>
-          <span class="text-caption text-grey-6">Selecciona cómo deseas pagar los módulos</span>
-        </template>
-      </q-select>
     </div>
 
     <!-- Password Field -->
@@ -287,26 +166,29 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth'
 import { storeToRefs } from 'pinia'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
-import { api } from 'src/boot/axios'
 
 const props = defineProps({
   tab: String,
 })
 
 // Variables de entorno para dominios
-const subdomain = import.meta.env.VITE_SUBDOMAIN || 'agendas'
-const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'grupoados.com'
-const localDomain = import.meta.env.VITE_LOCAL_DOMAIN || 'agendas.local'
+const subdomain = import.meta.env.VITE_SUBDOMAIN || 'template'
+const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'bitwia.com'
+const localDomain = import.meta.env.VITE_LOCAL_DOMAIN || 'template.local'
 
 // Construir el dominio completo para producción
 const mainDomainUrl = `${subdomain}.${baseDomain}`
 
-//const emit = defineEmits(['registration-success'])
 // Detectar si estamos en la url principal (sin subdominio de cliente)
-// localhost o agendas.grupoados.com = principal
-// cliente1.agendas.grupoados.com = subdominio
+// localhost o bitwia.com = principal
+// cliente1.bitwia.com = subdominio
 const hostname = window.location.hostname;
+
+// Dominio base donde vivirán los tenants (empresa1.bitwia.com o empresa1.template.local)
+const tenantBaseDomain = (hostname === 'localhost' || hostname.includes('.local')) ? localDomain : baseDomain
+
 const isMainDomain = hostname === 'localhost' || 
+                      hostname === 'bitwia.com' || 
                       hostname === mainDomainUrl || 
                       hostname === localDomain ||
                       hostname.split('.').length <= 2; // Para otros casos de desarrollo
@@ -317,8 +199,6 @@ const { authError } = storeToRefs(authStore)
 
 const show1 = ref(true)
 const isSubmitting = ref(false)
-const modulosDisponibles = ref([])
-const loadingModulos = ref(false)
 
 // Site key de reCAPTCHA v3 desde variables de entorno
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY
@@ -329,8 +209,6 @@ const formData = ref({
   name: '', // Campo requerido para registro
   name_company: '', // Campo nombre de empresa para registro
   domain: '', // Campo Dominio para registro
-  modulos: [], // Módulos seleccionados para el tenant
-  metodo_pago: 'mensual', // Método de pago por defecto
 })
 
 const isValidEmailAddress = (email) => {
@@ -388,16 +266,26 @@ const initRecaptcha = async () => {
 // Ejecutar reCAPTCHA v3 para una acción específica
 const executeRecaptcha = (action) => {
   return new Promise((resolve, reject) => {
-    if (!window.grecaptcha || !window.grecaptcha.ready) {
-      reject(new Error('reCAPTCHA no está listo'))
-      return
+    const maxWait = 10000 // 10 segundos máximo
+    const interval = 100
+    let elapsed = 0
+
+    const tryExecute = () => {
+      if (window.grecaptcha && window.grecaptcha.ready) {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha.execute(recaptchaSiteKey, { action })
+            .then(token => resolve(token))
+            .catch(error => reject(error))
+        })
+      } else if (elapsed >= maxWait) {
+        reject(new Error('reCAPTCHA no está listo después de esperar'))
+      } else {
+        elapsed += interval
+        setTimeout(tryExecute, interval)
+      }
     }
-    
-    window.grecaptcha.ready(() => {
-      window.grecaptcha.execute(recaptchaSiteKey, { action })
-        .then(token => resolve(token))
-        .catch(error => reject(error))
-    })
+
+    tryExecute()
   })
 }
 
@@ -420,11 +308,6 @@ const submitForm = async () => {
   // Validar dominio para registro
   if (isMainDomain && props.tab === 'register' && (!formData.value.domain || formData.value.domain.trim().length < 2)) {
     showErrorMessage('Por favor ingresa el dominio')
-    return
-  }
-  // Validar módulos para registro
-  if (isMainDomain && props.tab === 'register' && (!formData.value.modulos || formData.value.modulos.length === 0)) {
-    showErrorMessage('Por favor selecciona al menos un módulo')
     return
   }
 
@@ -467,15 +350,9 @@ const submitForm = async () => {
       if (isMainDomain) {
         registerData.name_company = formData.value.name_company;
         registerData.domain = formData.value.domain;
-        // Formatear módulos con metodo_pago
-        registerData.modulos = formData.value.modulos.map(moduloId => ({
-          modulo_id: moduloId,
-          metodo_pago: formData.value.metodo_pago
-        }));
       } else {
         delete registerData.name_company;
         delete registerData.domain;
-        delete registerData.modulos;
       }
 
       // no modificar la siguiente linea, es para evitar conflictos con el backend
@@ -485,17 +362,10 @@ const submitForm = async () => {
 
         if (response.status === 201) {
           if (endpoint === '/api/auth/register-tenant') {
-            // Redireccionar al nuevo tenant en su subdominio
+            // Redireccionar al nuevo tenant en su subdominio: empresa1.bitwia.com
             const newDomain = formData.value.domain;
             const protocol = window.location.protocol;
             const currentPort = window.location.port ? `:${window.location.port}` : '';
-            
-            // Construir dominio base según el entorno
-            let tenantBaseDomain = mainDomainUrl; // Producción
-            if (window.location.hostname === 'localhost' || window.location.hostname.includes('.local')) {
-              tenantBaseDomain = localDomain;
-            }
-            
             const redirectUrl = `${protocol}//${newDomain}.${tenantBaseDomain}${currentPort}`;
             window.location.href = redirectUrl;
             return;
@@ -620,48 +490,6 @@ const goToSend = () => {
   router.push('/forgot-password')
 }
 
-// Helper para obtener el icono del módulo
-const getModuloIcon = (modulo) => {
-  if (typeof modulo === 'number') {
-    // Si es un ID, buscar en modulosDisponibles
-    const mod = modulosDisponibles.value.find(m => m.id === modulo)
-    return mod?.slug === 'agendas' ? 'event' : 'local_parking'
-  }
-  // Si es un objeto
-  return modulo?.slug === 'agendas' ? 'event' : 'local_parking'
-}
-
-// Helper para obtener el nombre del módulo
-const getModuloNombre = (modulo) => {
-  if (typeof modulo === 'number') {
-    // Si es un ID, buscar en modulosDisponibles
-    const mod = modulosDisponibles.value.find(m => m.id === modulo)
-    return mod?.nombre_modulo || 'Módulo'
-  }
-  // Si es un objeto
-  return modulo?.nombre_modulo || modulo?.label || 'Módulo'
-}
-
-// Cargar módulos disponibles desde la API
-const cargarModulos = async () => {
-  if (!isMainDomain) return
-  
-  loadingModulos.value = true
-  try {
-    const response = await api.get('/api/modulos')
-    modulosDisponibles.value = response.data
-  } catch (error) {
-    console.error('Error al cargar módulos:', error)
-    // Solo mostrar error si no es por tenant inactivo
-    if (!error.response?.data?.tenant_inactive) {
-      // No mostrar error en la carga inicial para evitar confusión
-      console.warn('No se pudieron cargar los módulos disponibles')
-    }
-  } finally {
-    loadingModulos.value = false
-  }
-}
-
 // Función para limpiar reCAPTCHA
 const cleanupRecaptcha = () => {
   try {
@@ -692,8 +520,6 @@ onMounted(() => {
   authStore.clearAuthError()
   // Inicializar reCAPTCHA v3
   initRecaptcha()
-  // Cargar módulos disponibles si estamos en el dominio principal
-  cargarModulos()
 })
 
 onBeforeUnmount(() => {

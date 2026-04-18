@@ -147,36 +147,12 @@
               </q-input>
             </div>
           </div>
-          <div class="row q-px-md">
-            <div class="col-md-5 col-xs-12">
-              <q-input
-                outlined
-                v-model="editedItem.name_en"
-                ref="name"
-                label="Nombre Categoría en Inglés"
-                maxlength="191"
-              >
-              </q-input>
-            </div>
-          </div>
           <div class="row q-ma-md">
             <q-input
               outlined
               v-model="editedItem.description"
               ref="description"
               label="Descripción"
-              type="textarea"
-              rows="4"
-              class="col"
-            >
-            </q-input>
-          </div>
-          <div class="row q-ma-md">
-            <q-input
-              outlined
-              v-model="editedItem.description_en"
-              ref="description"
-              label="Descripción en Inglés"
               type="textarea"
               rows="4"
               class="col"
@@ -285,12 +261,6 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4"><div class="text-subtitle1">Nombre Categoría Inglés:</div></div>
-            <div class="col-md-8">
-              <div class="text-subtitle2">{{ showItem.value.name_en }}</div>
-            </div>
-          </div>
-          <div class="row">
             <div class="col-md-4"><div class="text-subtitle1">Url:</div></div>
             <div class="col-md-8">
               <div class="text-subtitle2">{{ showItem.value.slug }}</div>
@@ -300,12 +270,6 @@
             <div class="col-md-4"><div class="text-subtitle1">Descripción:</div></div>
             <div class="col-md-8">
               <div class="text-subtitle2" v-html="showItem.value.description"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4"><div class="text-subtitle1">Descripción Inglés:</div></div>
-            <div class="col-md-8">
-              <div class="text-subtitle2" v-html="showItem.value.description_en"></div>
             </div>
           </div>
           <div class="row">
@@ -403,8 +367,6 @@ const defaultItem = {
   parent_id: '',
   name: '',
   description: '',
-  name_en: '',
-  description_en: '',
   slug: '',
   orden: '',
   icono: '',
@@ -420,8 +382,6 @@ const showItem = {
   orden: '',
   icono: '',
   description: '',
-  name_en: '',
-  description_en: '',
   imagen: null,
   banner: null,
   created_at: '',
@@ -552,8 +512,6 @@ const showEditModal = (item) => {
     parent_id: item.parent_id,
     name: item.name,
     description: item.description,
-    name_en: item.name_en,
-    description_en: item.description_en,
     orden: item.orden,
     slug: item.slug,
     icono: item.icono,

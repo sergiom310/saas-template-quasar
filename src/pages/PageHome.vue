@@ -28,7 +28,7 @@
     </div>
 
     <div class="flex-center absolute-center">
-        <img src="~assets/ccheminot-agenda-1124013_640.png" style="max-width:280px;margin:auto;">
+        <img src="~assets/eshop.png" style="max-width:280px;margin:auto;">
     </div>
 
   </q-page>

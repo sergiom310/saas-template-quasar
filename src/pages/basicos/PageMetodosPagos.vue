@@ -161,7 +161,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { laravelCan } from 'src/functions/function-general'
-import { useMetodosPagosStore } from 'src/stores/metodosPagos'
+import { useMetodosPagosStore } from 'src/stores/MetodosPagos'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 
