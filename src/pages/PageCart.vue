@@ -45,7 +45,7 @@
               <q-btn
                 flat
                 round
-                color="primary"
+                
                 icon="remove"
                 class="buton-less"
                 @click="decreaseQuantity(item.id)"
@@ -62,9 +62,9 @@
                 @update:model-value="updateQuantity(item.id, $event)"
               />
 
-              <q-btn flat round color="primary" icon="add" @click="increaseQuantity(item.id)" />
+              <q-btn flat round  icon="add" @click="increaseQuantity(item.id)" />
 
-              <q-btn flat round color="primary" icon="delete" @click="removeFromCart(item.id)" />
+              <q-btn flat round  icon="delete" @click="removeFromCart(item.id)" />
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@
           </div>
 
           <q-btn
-            color="primary"
+            
             outline
             style="margin: 10px 5px 5px 0"
             :label="locale == 'es-CO' ? 'Proceder a Pagar' : 'Checkout'"
@@ -111,7 +111,7 @@
           </q-btn>
 
           <q-btn
-            color="primary"
+            
             outline
             @click="clearCart"
             style="margin: 10px 5px 5px 0"
@@ -130,7 +130,7 @@
     <!-- Diálogo de Checkout -->
     <q-dialog v-model="dialogCheckout" persistent>
       <q-card style="width: 600px; max-width: 90vw">
-        <q-toolbar class="bg-primary text-white">
+        <q-toolbar class="toolbar-header">
           <q-toolbar-title>
             <q-icon name="payment" class="q-mr-sm" />
             Procesar Pago
@@ -211,7 +211,7 @@
                 flat
                 dense
                 label="Total"
-                color="primary"
+                
                 size="sm"
                 @click="checkoutForm.monto = totalPrice - totalDiscount"
               >
@@ -248,7 +248,7 @@
           <q-btn flat label="Cancelar" color="negative" v-close-popup />
           <q-btn
             label="Confirmar Pago"
-            color="primary"
+            
             @click="procesarCheckout"
             :disable="!checkoutForm.metodo_pago_id || !checkoutForm.monto || checkoutForm.monto <= 0"
             :loading="processingCheckout"
@@ -591,7 +591,8 @@ const procesarCheckout = async () => {
         $q.dialog({
           title: 'Pago Parcial',
           message: `Está pagando $${checkoutForm.value.monto.toLocaleString('es-CO', { minimumFractionDigits: 2 })} de un total de $${totalVenta.value.toLocaleString('es-CO', { minimumFractionDigits: 2 })}. La venta quedará en estado PENDIENTE. ¿Desea continuar?`,
-          cancel: true,
+          cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+          ok: { label: 'Continuar', flat: true, color: 'secondary' },
           persistent: true
         }).onOk(() => resolve(true))
           .onCancel(() => resolve(false))

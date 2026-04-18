@@ -1,8 +1,9 @@
 <template>
   <q-page padding>
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="perm_data_setting" />
       <q-toolbar-title>Permissions</q-toolbar-title>
+      <q-btn v-if="laravelCan('system.create')" color="secondary" icon="add" label="Incluir" @click.stop="dialog = true" />
     </q-toolbar>
 
     <q-table
@@ -25,7 +26,6 @@
         <q-td>
           <q-btn
             icon="edit"
-            color="primary"
             @click.stop="showEditPermissionModal(row)"
             v-if="laravelCan('system.update')"
             flat
@@ -42,20 +42,6 @@
         </q-td>
       </template>
     </q-table>
-
-    <div
-      class="absolute-bottom text-center q-mb-lg no-pointer-events"
-      v-if="laravelCan('system.create')"
-    >
-      <q-btn
-        @click.stop="dialog = true"
-        round
-        class="all-pointer-events"
-        color="primary"
-        size="18px"
-        icon="add"
-      />
-    </div>
 
     <q-dialog v-model="dialog" persistent>
       <q-card style="width: 480px; max-width: 580px">
@@ -77,8 +63,8 @@
         </q-form>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" @click="close" />
-          <q-btn flat label="Guardar" color="primary" @click="save" />
+          <q-btn flat label="Cancelar"  @click="close" />
+          <q-btn flat label="Guardar"  @click="save" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -165,7 +151,8 @@ const deleteItem = (id) => {
   $q.dialog({
     title: 'Confirmar',
     message: '¿Realmente deseas eliminar este permiso?',
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Eliminar', flat: true, color: 'negative' },
     persistent: true,
   }).onOk(() => {
     store.deletePermission(id)

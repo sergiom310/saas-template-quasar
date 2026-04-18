@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="my-page">
-    <q-toolbar class="bg-blue-grey-4 text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="point_of_sale" />
       <q-toolbar-title> Ventas de Productos </q-toolbar-title>
     </q-toolbar>
@@ -175,7 +175,7 @@
     <!-- Diálogo de detalle de venta -->
     <q-dialog v-model="dialogDetalle" persistent>
       <q-card style="width: 900px; max-width: 90vw">
-        <q-toolbar class="bg-primary text-white">
+        <q-toolbar class="toolbar-header">
           <q-toolbar-title>
             <q-icon name="receipt" class="q-mr-sm" />
             Detalle de Venta #{{ ventaDetalle?.id }}
@@ -574,7 +574,8 @@ const cancelarVenta = (id) => {
   $q.dialog({
     title: 'Confirmar',
     message: '¿Está seguro de cancelar esta venta?',
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Cancelar Venta', flat: true, color: 'negative' },
     persistent: true
   }).onOk(async () => {
     await ventasStore.cancelarVenta(id)

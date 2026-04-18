@@ -1,1 +1,51 @@
 // app global css in SCSS form
+
+// app.scss
+.body--light {
+  --header-bg: #fefefe;
+  --header-text: #6f6e6e;
+  --header-border: #cccccc;
+  --page-text: #565454;
+  --page-text-secondary: #666;
+  --page-bg: #f5f5f5;
+  --drawer-active: #7693aa;
+  --header-toolbar-bg: #f5f5f5;
+
+  .q-bar {
+    border-bottom: 1px solid var(--header-border);
+  }
+
+  .toolbar-header {
+    background: var(--header-toolbar-bg);
+    color: var(--header-text);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .q-drawer .q-router-link--exact-active {
+    color: var(--drawer-active) !important;
+  }
+}
+
+.body--dark {
+  --header-bg: #1A1A2E;
+  --header-text: #ffffff;
+  --page-text: #f0f0f0;
+  --page-text-secondary: #aaa;
+  --page-bg: #1e1e1e;
+  --drawer-active: #90CAF9;
+
+  .q-header {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  .toolbar-header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    box-shadow: 0 2px 8px rgba(249, 249, 249, 0.3);
+  }
+
+  .q-drawer .q-router-link--exact-active {
+    color: var(--drawer-active) !important;
+  }
+}

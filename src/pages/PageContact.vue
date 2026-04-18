@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-      <q-bar dark class="bg-secondary text-white">
+      <q-bar :dark="!$q.dark.isActive" style="background: var(--header-bg); color: var(--header-text)">
         <q-btn dense flat round icon="lens" size="8.5px" color="red" />
         <q-btn dense flat round icon="lens" size="8.5px" color="yellow" />
         <q-btn dense flat round icon="lens" size="8.5px" color="green" />
@@ -12,7 +12,7 @@
           <q-card flat bordered class="my-card">
             <!-- Ubicación -->
             <q-card-section class="row items-center q-gutter-md">
-              <q-icon name="place" color="primary" size="32px" />
+              <q-icon name="place"  size="32px" />
               <div class="text-body1">
                 Bucaramanga - Colombia
               </div>
@@ -22,7 +22,7 @@
 
             <!-- Email -->
             <q-card-section class="row items-center q-gutter-md">
-              <q-icon name="email" color="primary" size="32px" />
+              <q-icon name="email"  X size="32px" />
               <a href="mailto:sergiogiovanny05@gmail.com" class="contact-link text-body1">
                 sergiogiovanny05@gmail.com
               </a>
@@ -32,7 +32,7 @@
 
             <!-- WhatsApp -->
             <q-card-section class="row items-center q-gutter-md">
-              <q-icon name="whatsapp" color="positive" size="32px" />
+              <q-icon name="fa-brands fa-whatsapp" size="32px" />
               <a :href="whatsappUrl" target="_blank" class="contact-link text-body1">
                 +57 316 3737253
               </a>
@@ -46,7 +46,7 @@
                 :href="whatsappUrl"
                 target="_blank"
                 color="positive"
-                icon="whatsapp"
+                icon="fa-brands fa-whatsapp"
                 :label="t('contactWhatsApp')"
                 unelevated
                 rounded

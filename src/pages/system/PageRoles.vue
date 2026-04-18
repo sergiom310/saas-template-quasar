@@ -1,8 +1,9 @@
 <template>
   <q-page padding>
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="perm_data_setting" />
       <q-toolbar-title> Roles </q-toolbar-title>
+      <q-btn v-if="laravelCan('system.create')" color="secondary" icon="add" label="Incluir" @click.stop="dialog = true" />
     </q-toolbar>
     <div class="">
       <q-table
@@ -26,7 +27,6 @@
           <q-td :props="cellProperties">
             <q-btn
               icon="edit"
-              color="primary"
               @click.stop="showEditRoleModal(cellProperties.row)"
               v-if="laravelCan('system.update')"
               flat
@@ -43,20 +43,6 @@
           </q-td>
         </template>
       </q-table>
-    </div>
-
-    <div
-      class="absolute-bottom text-center q-mb-lg no-pointer-events"
-      v-if="laravelCan('system.create')"
-    >
-      <q-btn
-        @click.stop="dialog = true"
-        round
-        class="all-pointer-events"
-        color="primary"
-        size="18px"
-        icon="add"
-      />
     </div>
 
     <q-dialog v-model="dialog" persistent>
@@ -121,8 +107,8 @@
         </q-form>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" @click="close"></q-btn>
-          <q-btn flat label="Guardar" color="primary" @click="save"></q-btn>
+          <q-btn flat label="Cancelar"  @click="close"></q-btn>
+          <q-btn flat label="Guardar"  @click="save"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -200,7 +186,8 @@ const deleteItem = (id) => {
   $q.dialog({
     title: 'Confirmar',
     message: '¿Eliminar este rol?',
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Eliminar', flat: true, color: 'negative' },
     persistent: true,
   }).onOk(() => rolesStore.deleteRole(id))
 }

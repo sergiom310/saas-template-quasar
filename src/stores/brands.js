@@ -23,7 +23,6 @@ export const useBrandsStore = defineStore('brands', {
     },
 
     async addBrand(payload) {
-      console.log('payload', payload)
       Loading.show()
       try {
         let formData = new FormData()

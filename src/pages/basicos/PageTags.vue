@@ -1,8 +1,9 @@
 <template>
   <q-page padding class="my-page">
-    <q-toolbar class="bg-blue-grey-4 text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="perm_data_setting" />
       <q-toolbar-title> Etiquetas </q-toolbar-title>
+      <q-btn v-if="laravelCan('admin.create')" color="secondary" icon="add" label="Incluir" @click.stop="openDialog" />
     </q-toolbar>
     <div class="">
       <q-table
@@ -44,7 +45,6 @@
               ></q-btn>
               <q-btn
                 icon="edit"
-                color="primary"
                 @click.stop="showEditModal(props.row)"
                 v-if="laravelCan('admin.update')"
                 flat
@@ -62,20 +62,6 @@
           </q-tr>
         </template>
       </q-table>
-    </div>
-
-    <div
-      class="absolute-bottom text-center q-mb-lg no-pointer-events"
-      v-if="laravelCan('admin.create')"
-    >
-      <q-btn
-        @click.stop="openDialog"
-        round
-        class="all-pointer-events"
-        color="primary"
-        size="18px"
-        icon="add"
-      />
     </div>
 
     <q-dialog v-model="dialog" persistent>
@@ -101,8 +87,8 @@
         </q-form>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" @click="close"></q-btn>
-          <q-btn flat label="Guardar" color="primary" @click="save"></q-btn>
+          <q-btn flat label="Cancelar"  @click="close"></q-btn>
+          <q-btn flat label="Guardar"  @click="save"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -149,7 +135,7 @@
         <q-separator></q-separator>
 
         <q-card-actions align="right">
-          <q-btn v-close-popup flat color="primary" label="Cerrar"></q-btn>
+          <q-btn v-close-popup flat  label="Cerrar"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -270,7 +256,8 @@ const deleteItem = (item) => {
   $q.dialog({
     title: 'Confirmar',
     message: 'Realmente desea eliminar el item?',
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Eliminar', flat: true, color: 'negative' },
     persistent: true,
   }).onOk(() => {
     tagStore.deleteTag(item)

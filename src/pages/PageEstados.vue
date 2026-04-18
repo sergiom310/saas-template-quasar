@@ -1,8 +1,9 @@
 <template>
   <q-page padding>
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="perm_data_setting" />
       <q-toolbar-title> Estados </q-toolbar-title>
+      <q-btn v-if="laravelCan('admin.create')" color="secondary" icon="add" label="Incluir" @click.stop="dialog = true" />
     </q-toolbar>
     <div class="">
       <q-table
@@ -42,20 +43,6 @@
           </q-td>
         </template>
       </q-table>
-    </div>
-
-    <div
-      class="absolute-bottom text-center q-mb-lg no-pointer-events"
-      v-if="laravelCan('admin.create')"
-    >
-      <q-btn
-        @click.stop="dialog = true"
-        round
-        class="all-pointer-events"
-        color="primary"
-        size="18px"
-        icon="add"
-      />
     </div>
 
     <q-dialog v-model="dialog" persistent>
@@ -167,7 +154,8 @@ export default {
         .dialog({
           title: 'Confirmar',
           message: 'Realmente desea eliminar el item?',
-          cancel: true,
+          cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+          ok: { label: 'Eliminar', flat: true, color: 'negative' },
           persistent: true,
         })
         .onOk(() => {

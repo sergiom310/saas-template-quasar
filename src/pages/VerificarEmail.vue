@@ -242,7 +242,8 @@ export default {
             type: 'email',
             placeholder: 'tu-email@ejemplo.com'
           },
-          cancel: true,
+          cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+          ok: { label: 'Reenviar', flat: true, color: 'secondary' },
           persistent: true
         }).onOk(email => {
           resolve(email)

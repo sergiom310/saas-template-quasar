@@ -26,7 +26,6 @@
             </q-select>
             
             <q-btn 
-              color="primary" 
               icon="refresh" 
               label="Actualizar"
               @click="cargarPagos"
@@ -85,14 +84,6 @@
             </q-td>
           </template>
 
-          <template v-slot:body-cell-modulo="props">
-            <q-td :props="props">
-              <q-badge color="primary">
-                {{ props.row.nombre_modulo }}
-              </q-badge>
-            </q-td>
-          </template>
-
           <template v-slot:body-cell-monto="props">
             <q-td :props="props">
               <span class="text-bold text-positive">
@@ -101,12 +92,21 @@
             </q-td>
           </template>
 
+          <template v-slot:body-cell-tipo_periodo="props">
+            <q-td :props="props">
+              <q-badge
+                v-if="props.row.tipo_periodo"
+                :color="props.row.tipo_periodo === 'anual' ? 'deep-purple' : 'blue'"
+                :label="props.row.tipo_periodo === 'anual' ? 'Anual' : 'Mensual'"
+              />
+              <span v-else class="text-grey-5">-</span>
+            </q-td>
+          </template>
+
           <template v-slot:body-cell-metodo_pago="props">
             <q-td :props="props">
-              <q-badge 
-                :color="props.row.metodo_pago === 'mensual' ? 'blue' : 'purple'"
-                :label="props.row.metodo_pago === 'mensual' ? 'Mensual' : 'Anual'"
-              />
+              <span v-if="props.row.metodo_pago">{{ props.row.metodo_pago }}</span>
+              <span v-else class="text-grey-5">-</span>
             </q-td>
           </template>
 
@@ -184,24 +184,24 @@ const columns = [
     sortable: true 
   },
   { 
-    name: 'modulo', 
-    label: 'Módulo', 
-    field: 'nombre_modulo', 
+    name: 'monto', 
+    label: 'Monto', 
+    field: 'monto', 
+    align: 'right',
+    sortable: true 
+  },
+  { 
+    name: 'tipo_periodo', 
+    label: 'Periodo', 
+    field: 'tipo_periodo', 
     align: 'center',
     sortable: true 
   },
   { 
     name: 'metodo_pago', 
-    label: 'Método', 
+    label: 'Método Pago', 
     field: 'metodo_pago', 
     align: 'center',
-    sortable: true 
-  },
-  { 
-    name: 'monto', 
-    label: 'Monto', 
-    field: 'monto', 
-    align: 'right',
     sortable: true 
   },
   { 

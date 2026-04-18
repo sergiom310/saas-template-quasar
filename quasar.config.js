@@ -12,6 +12,7 @@ export default defineConfig((ctx) => {
     extras: [
       'roboto-font', // optional, you are not bound to it
       'material-icons', // optional, you are not bound to it
+      'fontawesome-v6',
     ],
 
     build: {

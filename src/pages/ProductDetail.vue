@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-      <q-toolbar dark class="bg-blue-grey-4 text-white">
+      <q-toolbar class="toolbar-header">
         <q-avatar v-if="getProductCategory?.imagen" size="38px">
           <img :src="urlRepo + getProductCategory.imagen" />
         </q-avatar>

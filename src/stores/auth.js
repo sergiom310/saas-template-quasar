@@ -113,12 +113,12 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logoutUser(router) {
-      const locale = localStorage.getItem('appLocale')
 
       Dialog.create({
-        title: locale == 'es-CO' ? 'Confirmar' : 'Confirm',
-        message: locale == 'es-CO' ? 'Realmente desea salir?' : 'Exit the application?',
-        cancel: true,
+        title: 'Confirmar',
+        message: 'Realmente desea salir?',
+        cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+        ok: { label: 'Salir', color: 'negative', flat: true },
         persistent: true,
       }).onOk(async () => {
         // Llamar al backend para eliminar la cookie httpOnly

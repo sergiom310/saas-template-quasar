@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated>
+    <q-header elevated style="background: var(--header-bg); color: var(--header-text)">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleDrawer" />
         <q-btn id="btn-home" dense flat round icon="home" to="/home" />
@@ -11,7 +11,6 @@
           dense
           flat
           round
-          color="white"
           @click="changeDarkMode"
           icon="contrast"
           class="justify-end q-mr-xs"
@@ -22,45 +21,17 @@
           <q-badge color="accent" text-color="white" floating>{{ totalItems }}</q-badge>
         </q-btn>        
 
-        <q-btn
-          v-if="!isLoggedIn"
-          @click="goToAuth"
-          flat
-          icon-right="account_circle"
-          label="Acceso"
-          class="justify-end"
-        />
-        <q-btn v-else @click="handleLogout" flat icon-right="logout" class="justify-end" />
+
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" :breakpoint="767" :width="300" bordered>
-      <q-list class="text-grey-8">
-        <div class="avatar-style">
-          <q-item clickable v-ripple @click="goProfile">
-            <q-item-section avatar>
-              <q-avatar v-if="currentUser && currentUser.photo" size="60px">
-                <img :src="urlRepo + currentUser.photo" />
-              </q-avatar>
-              <q-avatar v-else size="60px">
-                <q-icon name="account_circle" size="1.5em" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>
-              {{ nameCurrentUser }}
-              <q-item-label caption lines="1">{{
-                currentUser && currentRoleUser ? currentRoleUser.role : 'Invitado'
-              }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </div>
+    <q-drawer v-model="leftDrawerOpen" overlay :breakpoint="767" :width="300" elevated>
+      <q-list style="height: 100%; display: flex; flex-direction: column;">
 
-        <q-separator></q-separator>
-
-        <div v-if="isLoggedIn">
+        <div v-if="isLoggedIn" style="flex: 1; overflow-y: auto;">
           <q-item v-if="isLoggedIn && laravelCan('system.index')" to="/dashboard">
             <q-item-section avatar>
-              <q-icon name="domain" color="primary" />
+              <q-icon name="domain" />
             </q-item-section>
             <q-item-section>
               <q-item-label>Dashboard</q-item-label>
@@ -80,7 +51,7 @@
             >
               <q-item to="/system/permissions" :inset-level="1" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="perm_data_setting" color="primary" />
+                  <q-icon name="perm_data_setting" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Permisos</q-item-label>
@@ -89,7 +60,7 @@
 
               <q-item to="/system/roles" :inset-level="1" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="supervised_user_circle" color="primary" />
+                  <q-icon name="supervised_user_circle" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Roles</q-item-label>
@@ -98,7 +69,7 @@
 
               <q-item to="/system/users" :inset-level="1" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="person" color="primary" />
+                  <q-icon name="person" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Usuarios</q-item-label>
@@ -109,25 +80,16 @@
 
             <q-item to="/system/tenants" :inset-level="0.5" exact clickable>
               <q-item-section avatar>
-                <q-icon name="business" color="primary" />
+                <q-icon name="business" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>Tenants</q-item-label>
               </q-item-section>
             </q-item>
-
-            <q-item to="/system/modulos" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="view_module" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Módulos</q-item-label>
-              </q-item-section>
-            </q-item>
             
             <q-item to="/system/pagos" :inset-level="0.5" exact clickable>
               <q-item-section avatar>
-                <q-icon name="currency_exchange" color="primary" />
+                <q-icon name="currency_exchange" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>Pagos</q-item-label>
@@ -207,7 +169,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="domain" color="primary" />
+                  <q-icon name="domain" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Marcas</q-item-label>
@@ -222,7 +184,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="category" color="primary" />
+                  <q-icon name="category" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Categorías</q-item-label>
@@ -237,7 +199,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="tag" color="primary" />
+                  <q-icon name="tag" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Etiquetas</q-item-label>
@@ -252,7 +214,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="inventory_2" color="primary" />
+                  <q-icon name="inventory_2" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Productos</q-item-label>
@@ -267,7 +229,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="payment" color="primary" />
+                  <q-icon name="payment" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Métodos de Pago</q-item-label>
@@ -282,7 +244,7 @@
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon name="business" color="primary" />
+                  <q-icon name="business" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Mi Empresa</q-item-label>
@@ -291,7 +253,7 @@
 
               <q-item to="/ventas" :inset-level="0.5" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="receipt_long" color="positive" />
+                  <q-icon name="receipt_long" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Ventas</q-item-label>
@@ -299,12 +261,50 @@
               </q-item>
             </q-expansion-item>
           </template>
-          
+
         </div>
+
+        <q-item v-if="!isLoggedIn" clickable v-ripple @click="goToAuth" style="margin-top: auto;">
+          <q-item-section avatar>
+            <q-icon name="account_circle" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Acceso</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <div v-if="isLoggedIn" style="margin-top: auto;">
+          <q-separator inset class="q-my-sm" />
+
+          <q-item clickable v-ripple @click="goProfile" class="q-py-sm">
+            <q-item-section avatar>
+              <q-avatar v-if="currentUser && currentUser.photo" size="40px">
+                <img :src="urlRepo + currentUser.photo" />
+              </q-avatar>
+              <q-avatar v-else size="40px">
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" size="40px"/>
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ nameCurrentUser }}</q-item-label>
+              <q-item-label caption>{{ currentUser && currentRoleUser ? currentRoleUser.role : 'Invitado' }}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple @click="handleLogout" class="text-negative">
+            <q-item-section avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Cerrar Sesión</q-item-label>
+            </q-item-section>
+          </q-item>
+        </div>
+
       </q-list>
     </q-drawer>
 
-    <q-footer>
+    <q-footer elevated style="background: var(--header-bg); color: var(--header-text)">
       <q-tabs inline-label>
         <q-route-tab
           v-for="nav in navs"
@@ -316,7 +316,7 @@
       </q-tabs>
     </q-footer>
 
-    <q-page-container class="scroll-container">
+    <q-page-container class="scroll-container" @click="closeDrawerOnDesktop">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -402,6 +402,12 @@ const changeDarkMode = () => {
   $q.dark.set(!$q.dark.isActive)
 }
 
+const closeDrawerOnDesktop = () => {
+  if ($q.screen.width >= 767 && leftDrawerOpen.value) {
+    leftDrawerOpen.value = false
+  }
+}
+
 const nameCurrentUser = computed(() => {
   if (currentUser.value?.name) {
     return currentUser.value.name.length > 20
@@ -442,20 +448,7 @@ const navs = computed(() => [
     display: block;
   }
 }
-.avatar-style {
-  background: url('https://cdn.quasar.dev/img/material.png');
-  height: auto;
-  background-size: cover;
 
-  .q-item__section {
-    font-weight: bold;
-    color: #ffffff;
-  }
-  .q-item__label {
-    font-weight: bold;
-    color: #fefefe;
-  }
-}
 @media screen and (min-width: 768px) {
   /*.q-footer {
       display: none;
@@ -470,13 +463,6 @@ const navs = computed(() => [
 //       display: none;
 //   }
 // }
-
-.q-drawer {
-  .q-router-link--exact-active {
-    color: gray !important;
-    font-weight: bold;
-  }
-}
 
 .q-buton:nth-child(3) {
   margin: 0 3px;

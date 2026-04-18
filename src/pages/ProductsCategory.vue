@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-xs">
-      <q-toolbar dark class="bg-blue-grey-4 text-white">
+      <q-toolbar class="toolbar-header">
         <q-avatar v-if="productCategory?.imagen" size="38px">
           <img :src="urlRepo + productCategory.imagen" />
         </q-avatar>
@@ -63,7 +63,6 @@
               </div>
               <q-card-section class="row q-my-sm add-to-cart" v-if="getProductQuantity(item.id) == 0">
                 <q-btn
-                  color="primary"
                   outline
                   icon-right="add_shopping_cart"
                   class="add-to-cart-button"
@@ -76,7 +75,6 @@
                   v-if="getProductQuantity(item.id) == 1"
                   flat
                   round
-                  color="primary"
                   icon="delete"
                   class="buton-remove"
                   @click="removeFromCart(item.id)"
@@ -85,7 +83,6 @@
                   v-if="getProductQuantity(item.id) > 1"
                   flat
                   round
-                  color="primary"
                   icon="remove"
                   class="buton-less"
                   @click="decreaseQuantity(item.id)"
@@ -98,7 +95,7 @@
                   class="q-mx-md set-quantity--input"
                   @update:model-value="updateQuantity(item.id, $event)"
                 />
-                <q-btn flat round color="primary" class="buton-add" icon="add" @click="increaseQuantity(item.id)" />
+                <q-btn flat round  class="buton-add" icon="add" @click="increaseQuantity(item.id)" />
               </q-card-section>
             </q-card>
           </div>
@@ -115,7 +112,7 @@
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[8, 8]" @click="goTop" v-if="showNavbar">
-      <q-btn round color="primary" icon="arrow_upward" />
+      <q-btn round  icon="arrow_upward" />
     </q-page-sticky>
   </q-page>
 </template>

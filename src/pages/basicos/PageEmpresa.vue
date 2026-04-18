@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="my-page">
-    <q-toolbar class="bg-blue-grey-4 text-white">
+    <q-toolbar class="toolbar-header">
       <q-btn flat round dense icon="business" />
       <q-toolbar-title>Mi Empresa</q-toolbar-title>
     </q-toolbar>

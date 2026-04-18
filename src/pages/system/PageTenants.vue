@@ -3,35 +3,20 @@
     <q-card>
       <q-card-section>
         <div class="text-h6">Tenants</div>
-        <q-btn color="primary" label="Nuevo Tenant" @click="openTenantModal()" class="q-mb-md" />
+        <q-btn  label="Nuevo Tenant" @click="openTenantModal()" class="q-mb-md" />
         <q-table
           :rows="tenants"
           :columns="columns"
           row-key="id"
           :loading="loading"
         >
-          <template v-slot:body-cell-modulos="props">
-            <q-td :props="props">
-              <div v-if="props.row.modulos && props.row.modulos.length > 0">
-                <q-badge
-                  v-for="modulo in props.row.modulos"
-                  :key="modulo.id"
-                  color="primary"
-                  class="q-mr-xs"
-                >
-                  {{ modulo.nombre_modulo }}
-                </q-badge>
-              </div>
-              <span v-else class="text-grey">Sin módulos</span>
-            </q-td>
-          </template>
           <template v-slot:body-cell-expires_at="props">
             <q-td :props="props">
               {{ formatearFecha(props.row.expires_at) }}
             </q-td>
           </template>
           <template v-slot:body-cell-is_active="props">
-            <q-toggle v-model="props.row.is_active" @update:model-value="toggleActive(props.row)" />
+            <q-toggle v-model="props.row.is_active" color="secondary" @update:model-value="toggleActive(props.row)" />
           </template>
           <template v-slot:body-cell-estado_pago="props">
             <q-td :props="props">
@@ -44,7 +29,7 @@
           </template>
           <template v-slot:body-cell-actions="props">
             <q-btn v-if="false" size="sm" color="secondary" label="Crear BD" @click="createDatabase(props.row)" class="q-ml-sm" disable />
-            <q-btn v-if="false" size="sm" color="primary" label="Migrar" @click="migrateTenant(props.row)" disable />
+            <q-btn v-if="false" size="sm"  label="Migrar" @click="migrateTenant(props.row)" disable />
             <q-btn size="sm" color="positive" icon="attach_money" label="Pagos" @click="openPagosModal(props.row)" />
             <q-btn size="sm" color="info" icon="edit" @click="editTenant(props.row)" class="q-ml-sm" />
             <q-btn size="sm" color="negative" icon="delete" @click="deleteTenant(props.row)" class="q-ml-sm" />
@@ -95,7 +80,7 @@
                     title="Fecha de Expiración"
                   >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                      <q-btn v-close-popup label="Cerrar"  flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -148,13 +133,13 @@
             class="q-mb-md"
           />
           
-          <q-toggle v-model="tenantForm.is_active" label="Activo" class="q-mb-sm" />
-          <q-toggle v-model="tenantForm.estado_pago" label="Estado de pago" />
+          <q-toggle v-model="tenantForm.is_active" color="secondary" label="Activo" class="q-mb-sm" />
+          <q-toggle v-model="tenantForm.estado_pago" color="positive" label="Estado de pago" />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" v-close-popup :disable="loadingSave" />
           <q-btn 
-            color="primary" 
+             
             label="Guardar" 
             @click="saveTenant" 
             :loading="loadingSave"
@@ -164,91 +149,80 @@
       </q-card>
     </q-dialog>
 
-    <!-- Modal para pagos de módulos -->
+    <!-- Modal para pagos -->
     <q-dialog v-model="pagosModal" persistent>
-      <q-card style="width: 600px; max-width: 90vw">
+      <q-card style="width: 500px; max-width: 90vw">
         <q-card-section>
           <div class="text-h6">Registrar Pago - {{ tenantSeleccionado?.name }}</div>
           <div class="text-caption text-grey">{{ tenantSeleccionado?.name_company }}</div>
         </q-card-section>
 
-        <q-card-section>
-          <div v-if="modulosPago.length === 0" class="text-center text-grey q-pa-md">
-            <q-icon name="info" size="md" />
-            <div class="q-mt-sm">Este tenant no tiene módulos asignados</div>
-          </div>
-
-          <div v-else>
-            <div class="text-subtitle2 q-mb-md">Módulos del tenant:</div>
-            
-            <q-list bordered separator>
-              <q-item v-for="(modulo, index) in modulosPago" :key="modulo.id + '-' + index" class="q-pa-md">
-                <q-item-section>
-                  <q-item-label class="text-bold">{{ modulo.nombre_modulo }}</q-item-label>
-                  <q-item-label caption>
-                    Fecha inicio: {{ formatearFecha(modulo.pivot.fecha_inicio) }}
-                  </q-item-label>
-                  <q-item-label caption>
-                    Fecha vencimiento: {{ formatearFecha(modulo.pivot.fecha_vencimiento) }}
-                  </q-item-label>
-                  <q-item-label caption class="q-mt-sm">
-                    <q-badge 
-                      :color="modulo.pivot.metodo_pago === 'mensual' ? 'blue' : 'purple'"
-                      :label="modulo.pivot.metodo_pago === 'mensual' ? 'Mensual' : 'Anual'"
-                    />
-                  </q-item-label>
-                  
-                  <!-- Select para cambiar método de pago -->
-                  <q-select
-                    v-model="modulo.nuevo_metodo_pago"
-                    :options="[
-                      { label: 'Mensual - $' + formatoPrecio(modulo.precio_mensual), value: 'mensual' },
-                      { label: 'Anual - $' + formatoPrecio(modulo.precio_anual), value: 'anual' }
-                    ]"
-                    option-value="value"
-                    option-label="label"
-                    outlined
-                    dense
-                    emit-value
-                    map-options
-                    label="Método de pago para esta renovación"
-                    class="q-mt-md"
-                  />
-                </q-item-section>
-              </q-item>
-            </q-list>
-
-            <!-- Campos adicionales del pago -->
-            <q-input
-              v-model="pagoForm.referencia_pago"
-              label="Referencia de pago (opcional)"
+        <q-card-section class="q-gutter-md">
+          <div class="row q-gutter-sm">
+            <q-select
+              v-model="pagoForm.tipo_periodo"
+              :options="tipoPeriodoOptions"
+              option-value="value"
+              option-label="label"
+              emit-value
+              map-options
+              label="Tipo de periodo"
               outlined
               dense
-              class="q-mt-md"
-              hint="Número de transacción, recibo, etc."
+              color="secondary"
+              class="col"
             />
-            
-            <q-input
-              v-model="pagoForm.notas"
-              label="Notas (opcional)"
+
+            <q-select
+              v-model="pagoForm.metodo_pago"
+              :options="metodosPagoOptions"
+              option-value="detalle"
+              option-label="detalle"
+              emit-value
+              map-options
+              label="Método de pago"
               outlined
               dense
-              type="textarea"
-              rows="2"
-              class="q-mt-md"
-              hint="Información adicional sobre el pago"
+              clearable
+              color="secondary"
+              class="col"
             />
           </div>
+
+          <q-input
+            v-model="pagoForm.monto"
+            label="Monto"
+            outlined
+            dense
+            type="number"
+            prefix="$"
+          />
+
+          <q-input
+            v-model="pagoForm.referencia_pago"
+            label="Referencia de pago (opcional)"
+            outlined
+            dense
+            hint="Número de transacción, recibo, etc."
+          />
+
+          <q-input
+            v-model="pagoForm.notas"
+            label="Notas (opcional)"
+            outlined
+            dense
+            type="textarea"
+            rows="2"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" v-close-popup :disable="loadingPago" />
-          <q-btn 
-            v-if="modulosPago.length > 0"
-            color="positive" 
+          <q-btn flat label="Cancelar" color="grey" v-close-popup :disable="loadingPago" />
+          <q-btn
+            color="positive"
             icon="attach_money"
-            label="Procesar Pago" 
-            @click="procesarPago" 
+            label="Procesar Pago"
+            @click="procesarPago"
             :loading="loadingPago"
             :disable="loadingPago"
           />
@@ -286,19 +260,35 @@ const tenantForm = ref({
 // Variables para el modal de pagos
 const pagosModal = ref(false)
 const tenantSeleccionado = ref(null)
-const modulosPago = ref([])
 const loadingPago = ref(false)
+const metodosPagoOptions = ref([])
 const pagoForm = ref({
+  tipo_periodo: 'mensual',
+  metodo_pago: null,
+  monto: '',
   referencia_pago: '',
   notas: ''
 })
+
+const tipoPeriodoOptions = [
+  { value: 'mensual', label: 'Mensual (+30 días)' },
+  { value: 'anual', label: 'Anual (+365 días)' }
+]
+
+const fetchMetodosPago = async () => {
+  try {
+    const res = await api.get('/api/metodos-pago/activos')
+    metodosPagoOptions.value = res.data
+  } catch (e) {
+    console.error('Error al cargar métodos de pago:', e)
+  }
+}
 
 const columns = [
   { name: 'name', label: 'Nombre', field: 'name', align: 'left' },
   { name: 'domain', label: 'Dominio', field: 'domain', align: 'left' },
   { name: 'database', label: 'Base de datos', field: 'database', align: 'left' },
   { name: 'owner_email', label: 'Email propietario', field: 'owner_email', align: 'left' },
-  { name: 'modulos', label: 'Módulos', field: 'modulos', align: 'left' },
   { name: 'expires_at', label: 'Expira el', field: 'expires_at', align: 'left' },
   { name: 'is_active', label: 'Activo', field: 'is_active', align: 'center' },
   { name: 'estado_pago', label: 'Estado Pago', field: 'estado_pago', align: 'center' },
@@ -446,7 +436,8 @@ const deleteTenant = (tenant) => {
   Dialog.create({
     title: 'Eliminar Tenant',
     message: `¿Seguro que deseas eliminar el tenant ${tenant.name}?`,
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Eliminar', flat: true, color: 'negative' },
     persistent: true
   }).onOk(async () => {
     loading.value = true
@@ -515,7 +506,8 @@ const createDatabase = async (tenant) => {
   Dialog.create({
     title: 'Confirmar creación de BD',
     message: `¿Seguro que deseas crear la base de datos para el tenant ${tenant.name}?`,
-    cancel: true,
+    cancel: { label: 'Cancelar', flat: true, color: 'grey' },
+    ok: { label: 'Crear', flat: true, color: 'secondary' },
     persistent: true
   }).onOk(async () => {
     loading.value = true
@@ -539,48 +531,33 @@ const createDatabase = async (tenant) => {
   })
 }
 
-const formatoPrecio = (precio) => {
-  if (!precio) return '0.00'
-  return parseFloat(precio).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
-
 const openPagosModal = (tenant) => {
   tenantSeleccionado.value = tenant
-  
-  // Copiar módulos y agregar campo para el nuevo método de pago
-  modulosPago.value = tenant.modulos ? tenant.modulos.map(modulo => ({
-    ...modulo,
-    nuevo_metodo_pago: modulo.pivot.metodo_pago // Por defecto, mantener el actual
-  })) : []
-  
-  // Resetear formulario
   pagoForm.value = {
+    tipo_periodo: 'mensual',
+    metodo_pago: null,
+    monto: '',
     referencia_pago: '',
     notas: ''
   }
-  
   pagosModal.value = true
 }
 
 const procesarPago = async () => {
-  if (!tenantSeleccionado.value || modulosPago.value.length === 0) return
-  
+  if (!tenantSeleccionado.value) return
+
   loadingPago.value = true
   Loading.show({ message: 'Procesando pago...' })
-  
+
   try {
-    // Preparar datos de módulos para el pago
-    const modulosData = modulosPago.value.map(modulo => ({
-      modulo_id: modulo.id,
-      metodo_pago: modulo.nuevo_metodo_pago
-    }))
-    
     const dataToSend = {
-      modulos: modulosData,
+      tipo_periodo: pagoForm.value.tipo_periodo || null,
+      metodo_pago: pagoForm.value.metodo_pago || null,
+      monto: pagoForm.value.monto || null,
       referencia_pago: pagoForm.value.referencia_pago || null,
       notas: pagoForm.value.notas || null
     }
-    
+
     const res = await api.post(`/api/tenants/${tenantSeleccionado.value.id}/pago-modulo`, dataToSend)
     
     Notify.create({
@@ -608,6 +585,7 @@ const procesarPago = async () => {
 onMounted(() => {
   fetchTenants()
   fetchModulos()
+  fetchMetodosPago()
 })
 </script>
 
