@@ -201,13 +201,14 @@ import { laravelCan, formatDate } from 'src/functions/function-general'
 import { useBrandsStore } from 'src/stores/brands'
 import { useQuasar, QFile, date } from 'quasar'
 import { useRouter } from 'vue-router'
+import { apiBaseURL } from 'src/boot/api'
 
 const brandStore = useBrandsStore()
 const $q = useQuasar()
 const router = useRouter()
 
 const brands = computed(() => brandStore.brands)
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 const details = ref(false)
 const dialog = ref(false)
 const editCreate = ref(false)

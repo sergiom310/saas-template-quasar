@@ -163,11 +163,12 @@ import { ref, onMounted } from 'vue'
 import { laravelCan } from 'src/functions/function-general'
 import { useEmpresaStore } from 'src/stores/empresa'
 import { useRouter } from 'vue-router'
+import { apiBaseURL } from 'src/boot/api'
 
 const empresaStore = useEmpresaStore()
 const router = useRouter()
 
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 
 const formRef = ref(null)
 

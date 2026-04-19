@@ -3,7 +3,7 @@
     <!-- Header Banner Mejorado -->
     <div class="form-header q-mb-lg">
       <div class="icon-wrapper">
-        <q-icon :name="tab === 'login' ? 'lock_open' : 'person_add'" size="48px" class="header-icon" />
+        <q-icon :name="tab === 'login' ? 'lock_open' : 'person_add'" size="24px" class="header-icon" />
       </div>
       <h5 class="form-title q-mt-md q-mb-xs">
         {{ tab === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta' }}
@@ -151,9 +151,9 @@
     <div class="text-center q-mt-md">
       <p class="text-caption text-grey-6">
         Protegido por reCAPTCHA. Aplican la 
-        <a href="https://policies.google.com/privacy" target="_blank" class="text-primary">Política de privacidad</a> 
+        <a href="https://policies.google.com/privacy" target="_blank" style="color: var(--header-bg); color: var(--header-text)">Política de privacidad</a> 
         y los 
-        <a href="https://policies.google.com/terms" target="_blank" class="text-primary">Términos de servicio</a> 
+        <a href="https://policies.google.com/terms" target="_blank" style="color: var(--header-bg); color: var(--header-text)">Términos de servicio</a> 
         de Google.
       </p>
     </div>
@@ -559,8 +559,8 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   background: #EEEFE0;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(238, 239, 224, 0.3);

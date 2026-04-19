@@ -5,13 +5,12 @@
         v-model="tab"
         dense
         class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
+        active-color="secondary"
+        indicator-color="secondary"
         align="justify"
-        narrow-indicator
       >
-        <q-tab name="login" label="Login" />
-        <q-tab v-if="isMainDomain" name="register" label="Register" />
+        <q-tab name="login" label="Iniciar sesión" />
+        <q-tab name="register" label="Registrarse" />
       </q-tabs>
 
       <q-separator />
@@ -21,7 +20,7 @@
           <login-register :tab="tab" @registration-success="handleRegistrationSuccess" />
         </q-tab-panel>
 
-        <q-tab-panel v-if="isMainDomain" name="register">
+        <q-tab-panel name="register">
           <login-register :tab="tab" @registration-success="handleRegistrationSuccess" />
           <!--v-bind:tab.sync="tab" -->
         </q-tab-panel>

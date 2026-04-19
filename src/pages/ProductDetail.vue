@@ -86,7 +86,6 @@
           <div class="q-mt-lg">
             <q-card-section v-if="getProductQuantity(getProductDetail.id) == 0">
               <q-btn
-                color="primary"
                 outline
                 icon-right="add_shopping_cart"
                 @click="addItem(getProductDetail)"
@@ -98,7 +97,6 @@
                 v-if="getProductQuantity(getProductDetail.id) == 1"
                 flat
                 round
-                color="primary"
                 icon="delete"
                 @click="removeFromCart(getProductDetail.id)"
               />
@@ -106,7 +104,6 @@
                 v-if="getProductQuantity(getProductDetail.id) > 1"
                 flat
                 round
-                color="primary"
                 icon="remove"
                 @click="decreaseQuantity(getProductDetail.id)"
               />
@@ -121,7 +118,6 @@
               <q-btn
                 flat
                 round
-                color="primary"
                 icon="add"
                 @click="increaseQuantity(getProductDetail.id)"
               />
@@ -132,7 +128,7 @@
       <div class="row text-center q-pt-lg" v-else>
         <div class="col-md-6 offset-md-3 col-xs-12 q-pa-sm">
           Cargando producto...
-          <q-spinner-hourglass color="primary" size="5em"></q-spinner-hourglass>
+          <q-spinner-hourglass  size="5em"></q-spinner-hourglass>
         </div>
       </div>
     </div>
@@ -148,6 +144,7 @@ import { useProductsStore } from 'src/stores/products'
 import { useCartStore } from 'src/stores/shoppingCart'
 import { useI18n } from 'vue-i18n'
 import { useUtils } from 'src/composables/useUtils'
+import { apiBaseURL } from 'src/boot/api'
 
 const { formatPrice, priceDiscount } = useUtils()
 
@@ -158,7 +155,7 @@ const { locale } = useI18n({ useScope: 'global' })
 const slide = ref(0)
 const route = useRoute()
 const productStore = useProductsStore()
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 
 // const productId = computed(() => route.params.id)
 const cartStore = useCartStore()

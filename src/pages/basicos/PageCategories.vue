@@ -333,13 +333,14 @@ import { laravelCan, formatDate } from 'src/functions/function-general'
 import { useCategoryStore } from 'src/stores/category'
 import { useQuasar, QFile, date } from 'quasar'
 import { useRouter } from 'vue-router'
+import { apiBaseURL } from 'src/boot/api'
 
 const categoryStore = useCategoryStore()
 const $q = useQuasar()
 const router = useRouter()
 
 const categories = computed(() => categoryStore.categories)
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 const details = ref(false)
 const dialog = ref(false)
 const editCreate = ref(false)

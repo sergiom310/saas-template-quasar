@@ -1,6 +1,29 @@
 import { defineBoot } from '#q-app/wrappers'
 
-const baseURL = process.env.__ENV__
+/**
+ * Construye la URL base del API de forma dinámica.
+ * Si el hostname actual tiene un subdominio (ej: lotus.template.local),
+ * lo preserva para que Spatie Multitenancy identifique el tenant correcto.
+ * En caso contrario usa la URL del .env.
+ */
+function buildBaseURL() {
+  const envURL = new URL(process.env.__ENV__)
+  const currentHostname = window.location.hostname
+
+  // Extraer el dominio base del env (sin subdominio)
+  // ej: "template.local" de "http://template.local:8000"
+  const envHostname = envURL.hostname
+
+  // Si el hostname actual termina con el dominio base del env
+  // y es diferente (tiene subdominio), usarlo en la URL del backend
+  if (currentHostname !== envHostname && currentHostname.endsWith(envHostname)) {
+    return `${envURL.protocol}//${currentHostname}:${envURL.port}`
+  }
+
+  return process.env.__ENV__
+}
+
+const baseURL = buildBaseURL()
 
 const AUTH_EXEMPT_PATHS = ['/auth', '/verificar', '/forgot-password', '/reset-password']
 
@@ -105,6 +128,9 @@ export const api = {
     return request('DELETE', url)
   },
 }
+
+/** URL base del backend con el subdominio correcto para usar en src de imágenes */
+export const apiBaseURL = baseURL
 
 export default defineBoot(({ app }) => {
   app.config.globalProperties.$api = api

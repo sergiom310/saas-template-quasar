@@ -256,8 +256,9 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { showErrorMessage } from 'src/functions/function-show-error-message'
 import { useAuthStore } from 'src/stores/auth'
+import { apiBaseURL } from 'src/boot/api'
 
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 
 const authStore = useAuthStore()
 

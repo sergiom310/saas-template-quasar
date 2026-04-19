@@ -119,7 +119,12 @@ const routes = [
         path: '/tienda/empresa',
         component: () => import('pages/basicos/PageEmpresa.vue'),
         meta: { requiresAuth: true },
-      },      
+      },
+      {
+        path: '/tienda/ordenes',
+        component: () => import('pages/system/PageOrdenes.vue'),
+        meta: { requiresAuth: true, title: 'Órdenes de Pedido' },
+      },
       {
         path: '/ventas',
         component: () => import('pages/ventas/PageVentas.vue'),

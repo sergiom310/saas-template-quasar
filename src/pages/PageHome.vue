@@ -27,8 +27,27 @@
       </q-card>
     </div>
 
-    <div class="flex-center absolute-center">
-        <img src="~assets/eshop.png" style="max-width:280px;margin:auto;">
+    <div class="flex-center absolute-center hero-container">
+      <div class="hero-content text-center">
+        <img src="~assets/eshop.png" style="max-width: 120px; margin: 0 auto 1.5rem;">
+
+        <h4 class="hero-title q-mt-none q-mb-sm">Tienda Virtual</h4>
+        <p class="hero-subtitle text-grey-7 q-mb-xl">
+          Sistema de gestión de productos por categorías, marcas y ventas.<br>
+          Administra tu negocio de forma simple y eficiente.
+        </p>
+
+        <q-btn
+          unelevated
+          color="secondary"
+          label="Ingresar al sistema"
+          icon="login"
+          size="lg"
+          no-caps
+          to="/auth"
+          class="hero-btn"
+        />
+      </div>
     </div>
 
   </q-page>
@@ -38,31 +57,41 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { QCarousel, QCarouselSlide } from 'quasar'
+import { apiBaseURL } from 'src/boot/api'
 
 const { t } = useI18n()
 
-const urlRepo = `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_API_REPO_URL}`
+const urlRepo = `${apiBaseURL}${import.meta.env.VITE_API_REPO_URL}`
 const slide = ref(1)
 </script>
 
 <style lang="scss" scoped>
-.video-container {
-  position: relative;
+.hero-container {
   width: 100%;
-  max-width: 360px;
-  margin: auto;
-  aspect-ratio: 9 / 16; /* Relación 9:16 */
-  overflow: hidden;
+  padding: 2rem 1rem;
 }
 
-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
+.hero-content {
+  max-width: 480px;
+  margin: 0 auto;
 }
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.hero-btn {
+  min-width: 220px;
+  border-radius: 12px;
+}
+
 .homeCarousel {
   height: 190px;
 

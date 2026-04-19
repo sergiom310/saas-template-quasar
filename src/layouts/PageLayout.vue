@@ -3,7 +3,7 @@
     <q-header elevated style="background: var(--header-bg); color: var(--header-text)">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleDrawer" />
-        <q-btn id="btn-home" dense flat round icon="home" to="/home" />
+        <q-btn id="btn-home" dense flat round icon="home" :to="isLandlord ? '/home' : (isLoggedIn ? '/dashboard' : '/')" />
 
         <q-space />
 
@@ -28,78 +28,90 @@
     <q-drawer v-model="leftDrawerOpen" overlay :breakpoint="767" :width="300" elevated>
       <q-list style="height: 100%; display: flex; flex-direction: column;">
 
-        <div v-if="isLoggedIn" style="flex: 1; overflow-y: auto;">
-          <q-item v-if="isLoggedIn && laravelCan('system.index')" to="/dashboard">
-            <q-item-section avatar>
-              <q-icon name="domain" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Dashboard</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-expansion-item
-            v-if="laravelCan('system.index')"
-            expand-separator
-            icon="settings"
-            label="System"
-          >
+        <div style="flex: 1; overflow-y: auto;">
+          <!-- Items exclusivos para usuarios logueados -->
+          <template v-if="isLoggedIn">
+            <q-item v-if="laravelCan('system.index')" to="/dashboard">
+              <q-item-section avatar>
+                <q-icon name="domain" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Dashboard</q-item-label>
+              </q-item-section>
+            </q-item>
             <q-expansion-item
-              :header-inset-level="0.5"
+              v-if="laravelCan('system.index')"
               expand-separator
-              icon="receipt"
-              label="Usuarios y Permisos"
+              icon="settings"
+              label="System"
             >
-              <q-item to="/system/permissions" :inset-level="1" exact clickable>
+              <q-expansion-item
+                :header-inset-level="0.5"
+                expand-separator
+                icon="receipt"
+                label="Usuarios y Permisos"
+              >
+                <q-item to="/system/permissions" :inset-level="1" exact clickable>
+                  <q-item-section avatar>
+                    <q-icon name="perm_data_setting" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Permisos</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item to="/system/roles" :inset-level="1" exact clickable>
+                  <q-item-section avatar>
+                    <q-icon name="supervised_user_circle" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Roles</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item to="/system/users" :inset-level="1" exact clickable>
+                  <q-item-section avatar>
+                    <q-icon name="person" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Usuarios</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+              </q-expansion-item>
+
+              <q-item to="/system/tenants" :inset-level="0.5" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="perm_data_setting" />
+                  <q-icon name="business" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Permisos</q-item-label>
+                  <q-item-label>Tenants</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item to="/system/roles" :inset-level="1" exact clickable>
+              <q-item to="/system/pagos" :inset-level="0.5" exact clickable>
                 <q-item-section avatar>
-                  <q-icon name="supervised_user_circle" />
+                  <q-icon name="currency_exchange" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Roles</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item to="/system/users" :inset-level="1" exact clickable>
-                <q-item-section avatar>
-                  <q-icon name="person" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Usuarios</q-item-label>
+                  <q-item-label>Pagos</q-item-label>
                 </q-item-section>
               </q-item>
 
             </q-expansion-item>
+          </template>
 
-            <q-item to="/system/tenants" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="business" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Tenants</q-item-label>
-              </q-item-section>
-            </q-item>
-            
-            <q-item to="/system/pagos" :inset-level="0.5" exact clickable>
-              <q-item-section avatar>
-                <q-icon name="currency_exchange" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Pagos</q-item-label>
-              </q-item-section>
-            </q-item>
-
-          </q-expansion-item>
-
-          <!-- Menú Tienda solo visible para tenants (NO para landlord/admin) -->
+          <!-- Menú Tienda: visible para tenants, logueado o no -->
           <template v-if="!isLandlord">
+            <q-item to="/" exact clickable>
+              <q-item-section avatar>
+                <q-icon name="storefront" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Tienda</q-item-label>
+              </q-item-section>
+            </q-item>
+
             <q-expansion-item
               v-if="categoriesHome.length > 0"
               expand-separator
@@ -259,6 +271,15 @@
                   <q-item-label>Ventas</q-item-label>
                 </q-item-section>
               </q-item>
+
+              <q-item to="/tienda/ordenes" :inset-level="0.5" exact clickable v-if="laravelCan('admin.create')">
+                <q-item-section avatar>
+                  <q-icon name="list_alt" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Órdenes</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-expansion-item>
           </template>
 
@@ -324,7 +345,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from 'src/stores/auth'
 import { useI18nStore } from 'src/stores/i18nStore'
@@ -334,12 +355,13 @@ import { laravelCan } from 'src/functions/function-general'
 import { useRouter } from 'vue-router'
 import { useRecaptchaRouteHandler } from 'src/composables/useRecaptcha'
 import { useCartStore } from 'src/stores/shoppingCart'
+import { apiBaseURL } from 'src/boot/api'
 
 const i18nStore = useI18nStore()
 const { locale: storeLocale } = storeToRefs(i18nStore)
 const { locale, t } = useI18n({ useScope: 'global' })
 
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 const authStore = useAuthStore()
 const { isLoggedIn, currentUser, currentRoleUser } = storeToRefs(authStore)
 const categoryStore = useCategoryStore()
@@ -355,16 +377,6 @@ const $q = useQuasar()
 useRecaptchaRouteHandler()
 
 const leftDrawerOpen = ref(false)
-
-// Función para determinar si estamos en desktop
-const isDesktop = () => {
-  return $q.screen.width >= 1200 // Desktop a partir de 1200px
-}
-
-// Inicializar el estado del drawer basado en el tamaño de pantalla
-const initializeDrawerState = () => {
-  leftDrawerOpen.value = isDesktop()
-}
 
 const toggleDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -423,15 +435,11 @@ const isLandlord = computed(() => {
   return hostname === 'localhost'
 })
 
-// Watcher para cambios en el tamaño de pantalla
-watch(() => $q.screen.width, (newWidth) => {
-  leftDrawerOpen.value = newWidth >= 1200
-})
+// Watcher para cambios en el tamaño de pantalla eliminado — el drawer solo responde al botón burger
 
 onMounted(() => {
   locale.value = storeLocale.value
   categoryStore.loadCategoryHome()
-  initializeDrawerState()
 })
 
 const navs = computed(() => [

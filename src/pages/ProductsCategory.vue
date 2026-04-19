@@ -126,6 +126,7 @@ import { useI18nStore } from 'src/stores/i18nStore'
 import { useCartStore } from 'src/stores/shoppingCart'
 import { useI18n } from 'vue-i18n'
 import { useUtils } from 'src/composables/useUtils'
+import { apiBaseURL } from 'src/boot/api'
 
 const { formatPrice, priceDiscount } = useUtils()
 
@@ -141,7 +142,7 @@ const cartStore = useCartStore()
 const { cart } = storeToRefs(cartStore)
 const { addToCart, removeFromCart, updateQuantity } = cartStore
 
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 const lastScrollPosition = ref(0)
 const showNavbar = ref(false)
 

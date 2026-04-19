@@ -351,7 +351,7 @@
               @update:model-value="handleFileChange"
             >
               <template v-slot:prepend>
-                <q-icon name="cloud_upload" class="primary" />
+                <q-icon name="cloud_upload" />
               </template>
             </q-file>
           </div>
@@ -365,15 +365,13 @@
     </q-dialog>
 
     <q-dialog v-model="details" class="q-pa-md q-gutter-sm" persistent>
-      <q-card style="width: 890px; max-width: 890px">
-        <q-toolbar>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
-          </q-avatar>
-
-          <q-toolbar-title><span class="text-weight-bold">Detalle</span> Registro</q-toolbar-title>
-
-          <q-btn flat round dense icon="close" v-close-popup></q-btn>
+      <q-card style="width: 860px; max-width: 95vw">
+        <q-toolbar class="toolbar-header">
+          <q-toolbar-title>
+            <q-icon name="inventory_2" class="q-mr-sm" />
+            Detalle del Producto
+          </q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
         <q-card-section>
@@ -444,59 +442,52 @@
           </div>
         </q-card-section>
 
-        <q-separator></q-separator>
+        <q-separator />
 
-        <div class="row q-ma-md text-subtitle1">Imágenes asociadas al Producto</div>
-
-        <div class="row q-ma-md flex-center" v-if="images.length > 0">
-          <q-card class="my-card q-mx-sm q-mb-sm" v-for="imagen in images" :key="imagen.id">
-            <q-img :src="urlRepo + imagen.image" class="card-img">
-            </q-img>
-            <q-card-section absolute-bottom text-subtitle2>
-              {{imagen.description ? '(' + imagen.description + ')' : ''}}
-              <q-icon
-                class="absolute all-pointer-events cursor-pointer"
-                size="28px"
-                name="delete"
-                title="Eliminar"
-                style="bottom: 2px; right: 2px"
-                @click.stop="deleteImagen(imagen.id)"
-              />
-            </q-card-section>
-          </q-card>
-        </div>
-
-        <q-separator></q-separator>
-
-        <div class="row q-ma-md text-subtitle1">Cargar Imágenes al Producto</div>
-
-        <div class="row q-ma-md">
-          <div class="col-md-12 col-xs-12 q-px-xs">
-            <q-uploader
-              style="width: 100%"
-              label="Cargar Imágenes"
-              :factory="factoryFn"
-              @added="selectedFiles"
-              accept=".jpg, image/*"
-              ref="uploader1"
-            />
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold q-mb-sm">Imágenes asociadas al Producto</div>
+          <div v-if="images.length > 0" class="row q-gutter-sm">
+            <q-card class="my-card" v-for="imagen in images" :key="imagen.id" style="width: 140px">
+              <q-img :src="urlRepo + imagen.image" class="card-img" style="height: 120px" />
+              <q-card-section class="q-pa-xs row items-center justify-between">
+                <span class="text-caption ellipsis" style="max-width: 90px">{{ imagen.description || '' }}</span>
+                <q-btn
+                  v-if="laravelCan('admin.delete')"
+                  flat
+                  round
+                  dense
+                  size="sm"
+                  icon="delete"
+                  color="negative"
+                  @click.stop="deleteImagen(imagen.id)"
+                />
+              </q-card-section>
+            </q-card>
           </div>
-          <!-- <div class="col-md-6 col-xs-12 q-px-xs">
-            <q-input
-              outlined
-              v-model="showItem.value.detail_img1"
-              ref="detail_p1"
-              label="Detalle de la imagen"
-              class="col"
-            >
-            </q-input>
-          </div> -->
-        </div>
+          <div v-else class="text-caption text-grey-5 q-py-sm">Sin imágenes cargadas aún.</div>
+        </q-card-section>
 
-        <q-separator></q-separator>
+        <q-separator />
+
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold q-mb-sm">Cargar Imágenes al Producto</div>
+          <q-uploader
+            style="width: 100%"
+            label="Arrastra imágenes aquí o haz clic para seleccionar"
+            :factory="factoryFn"
+            @added="selectedFiles"
+            accept=".jpg, image/*"
+            ref="uploader1"
+            color="secondary"
+            flat
+            bordered
+          />
+        </q-card-section>
+
+        <q-separator />
 
         <q-card-actions align="right">
-          <q-btn v-close-popup flat  label="Cerrar"></q-btn>
+          <q-btn flat label="Cerrar" color="grey" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -510,13 +501,14 @@ import { useCategoryStore } from 'src/stores/category'
 import { useBrandsStore } from 'src/stores/brands'
 import { laravelCan, formatDate } from 'src/functions/function-general'
 import { useQuasar, QEditor } from 'quasar'
+import { apiBaseURL } from 'src/boot/api'
 
 const $q = useQuasar()
 const productsStore = useProductsStore()
 const categoryStore = useCategoryStore()
 const brandStore = useBrandsStore()
 
-const urlRepo = `${import.meta.env.VITE_API_URL}/`
+const urlRepo = `${apiBaseURL}/`
 const details = ref(false)
 const dialog = ref(false)
 const editCreate = ref(false)
